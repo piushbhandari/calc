@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --container: 58.8rem;
+  --gutter: 2.4rem;
+  --primary-font: "League Spartan", sans-serif;
+}
+
+/* theme switcher variables */
+
+.dark {
+  --bg: #3a4663;
+  --numBtns: #eae3dc;
+  --numBtnsHover: #fffffe;
+  --numBtnsText: #434a59;
+  --screenText: white;
+}
+
+.light {
+  --bg: #f2f2f2;
+  --numBtns: #e5e4e1;
+  --numBtnsHover: #ffffff;
+  --numBtnsText: #36362c;
+  --screenText: #36362c;
+}
+.funky {
+  --bg: #17062a;
+  --numBtns: #331c4d;
+  --numBtnsHover: #6c34ac;
+  --numBtnsText: #ffe53d;
+  --screenText: #ffe53d;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  font: inherit;
+  font-family: var(--primary-font);
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  padding-top: 9.8rem;
+  padding-bottom: 9.6rem;
+  background: var(--bg);
+}
+
+.container {
+  border: 1px solid red;
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.calculator__title {
+  letter-spacing: -0.533333px;
+  font-size: 3.2rem;
+  line-height: 2.9rem;
+}
+
+/* media queries */
+
+@media all and (max-width: 600px) {
+  body {
+    padding: 3rem 0;
+  }
+}
