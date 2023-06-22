@@ -4,6 +4,8 @@
   --container: 58.8rem;
   --gutter: 2.4rem;
   --primary-font: "League Spartan", sans-serif;
+  --border-radius: 10px;
+  --white: white;
 }
 
 /* theme switcher variables */
@@ -11,24 +13,54 @@
 .dark {
   --bg: #3a4663;
   --numBtns: #eae3dc;
+  --numBtnsBoxShadow: inset 0px -4px 0px #b3a497;
   --numBtnsHover: #fffffe;
   --numBtnsText: #434a59;
+  --screen: #181f33;
   --screenText: white;
+  --button-pad: #242d44;
+  --reset: #647198;
+  --resetBoxShadow: inset 0px -4px 0px #414e73;
+  --resetHover: #a2b2e1;
+  --equals: #d03f2f;
+  --equalsBoxShadow: inset 0px -4px 0px #93261a;
+  --equalsHover: #f96b5b;
+  --equalsText: white;
 }
 
 .light {
   --bg: #f2f2f2;
   --numBtns: #e5e4e1;
+  --numBtnsBoxShadow: inset 0px -4px 0px #a79e91;
   --numBtnsHover: #ffffff;
   --numBtnsText: #36362c;
+  --screen: #eeeeee;
   --screenText: #36362c;
+  --button-pad: #d2cdcd;
+  --reset: #378187;
+  --resetBoxShadow: inset 0px -4px 0px #1b6066;
+  --resetHover: #62b5bc;
+  --equals: #c85402;
+  --equalsBoxShadow: inset 0px -4px 0px #873901;
+  --equalsHover: #ff8a38;
+  --equalsText: white;
 }
 .funky {
   --bg: #17062a;
   --numBtns: #331c4d;
+  --numBtnsBoxShadow: inset 0px -4px 0px #881c9e;
   --numBtnsHover: #6c34ac;
   --numBtnsText: #ffe53d;
+  --screen: #1e0936;
   --screenText: #ffe53d;
+  --button-pad: #1e0936;
+  --reset: #56077c;
+  --resetBoxShadow: inset 0px -4px 0px #be15f4;
+  --resetHover: #8631af;
+  --equals: #00ded0;
+  --equalsBoxShadow: inset 0px -4px 0px #6cf9f1;
+  --equalsHover: #93fff8;
+  --equalsText: #1a2327;
 }
 
 *,
@@ -52,7 +84,22 @@ body {
   padding-bottom: 9.6rem;
   background: var(--bg);
 }
+button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
 
+a,
+button {
+  transition: var(--transition1);
+}
+ul[role="list"],
+ol[role="list"] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 .container {
   border: 1px solid red;
   width: 100%;
@@ -60,17 +107,106 @@ body {
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
-
+.calculator__top {
+  margin-bottom: 3.2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
 .calculator__title {
   letter-spacing: -0.533333px;
   font-size: 3.2rem;
   line-height: 2.9rem;
+  color: var(--screenText);
+}
+.calculator__screen {
+  background-color: var(--screen);
+  margin-bottom: 2.4rem;
+  border-radius: var(--border-radius);
+  text-align: right;
+  padding: 4rem 3.2rem 3.6rem 3.2rem;
+}
+.calculator__screen-text {
+  color: var(--screenText);
+  font-size: 5.6rem;
+  font-weight: 700;
+  line-height: 5.2rem;
+  letter-spacing: -0.933333px;
+}
+.calculator__main {
+  border-radius: var(--border-radius);
+  padding: 3.2rem 3rem;
+  background: var(--button-pad);
 }
 
+/* number pad */
+.calculator-grid-pad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+}
+.calculator-grid-pad__item--reset {
+  grid-column: 1 / 3;
+}
+.calculator-grid-pad__item--equals {
+  grid-column: 3 / -1;
+}
+.calculator-grid-pad__button {
+  display: block;
+  padding: 1.3rem 1.3rem 1.1rem 1.4rem;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 5rem;
+  letter-spacing: -0.666667px;
+  background: var(--numBtns);
+  color: var(--numBtnsText);
+  border-radius: 5px;
+  box-shadow: var(--numBtnsBoxShadow);
+}
+.calculator-grid-pad__button:hover,
+.calculator-grid-pad__button:focus {
+  background: var(--numBtnsHover);
+}
+
+.reset-btn,
+.backspace-btn {
+  font-size: 2.8rem;
+  background: var(--reset);
+  box-shadow: var(--resetBoxShadow);
+  color: var(--white);
+}
+.reset-btn:hover,
+.reset-btn:focus,
+.backspace-btn:hover,
+.backspace-btn:focus {
+  background-color: var(--resetHover);
+}
+.equals-btn {
+  font-size: 2.8rem;
+  background: var(--equals);
+  box-shadow: var(--equalsBoxShadow);
+  color: var(--equalsText);
+}
+.equals-btn:hover,
+.equals-btn:focus {
+  background-color: var(--equalsHover);
+}
 /* media queries */
 
 @media all and (max-width: 600px) {
   body {
     padding: 3rem 0;
+  }
+  .calculator__screen {
+    padding: 3rem 2.4rem 2.2rem 2.4rem;
+  }
+  .calculator-grid-pad {
+    gap: 1.3rem;
+  }
+  .calculator-grid-pad__button {
+    font-size: 3.2rem;
+    letter-spacing: -0.533333px;
   }
 }
