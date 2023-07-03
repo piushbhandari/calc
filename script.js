@@ -3,22 +3,6 @@
 const themeBtns = [...document.querySelectorAll(".testbtn")];
 const body = document.querySelector("body");
 
-window.addEventListener("DOMContentLoaded", (e) => {
-  let theme = getStorage("theme");
-  let currentTheme = getStorage("currentThemeBtn");
-  let currentThemeBtn = document.querySelector(
-    `[data-theme="${currentTheme}"]`
-  );
-  if (theme) {
-    loadTheme(theme);
-  }
-  if (currentThemeBtn) {
-    toggleClasses(currentThemeBtn, themeBtns);
-  } else {
-    themeBtns[0].classList.add("active");
-  }
-});
-
 themeBtns.forEach((btn) => {
   let dataTheme = btn.getAttribute("data-theme");
 
@@ -45,13 +29,6 @@ function toggleClasses(currentBtn, btns) {
 
   currentBtn.classList.add("active");
 }
-// local storage
-function setStorage(key, value) {
-  localStorage.setItem(key, value);
-}
-function getStorage(name) {
-  return localStorage.getItem(name);
-}
 
 // buttons
 
@@ -67,10 +44,13 @@ const screenTxt = document.querySelector(".calculator__screen-text");
 // global variables
 
 const resetNumber = 0;
-let firstNumber = "";
-let secondNumber = "";
-let currentNumber = "";
-let currentSymbol = "";
+
+let trackers = {
+  firstNumber: "",
+  secondNumber: "",
+  currentNumber: "0",
+  currentSymbol: "",
+};
 
 // event listeners
 numberBtns.forEach((btn) => {
@@ -88,56 +68,84 @@ delBtn.addEventListener("click", deleteLastNum);
 
 equalBtn.addEventListener("click", calculate);
 
+window.addEventListener("DOMContentLoaded", (e) => {
+  let theme = getStorage("theme");
+  let currentTheme = getStorage("currentThemeBtn");
+  let currentThemeBtn = document.querySelector(
+    `[data-theme="${currentTheme}"]`
+  );
+
+  let localTrackers = JSON.parse(getStorage("trackers"));
+  if (theme) {
+    loadTheme(theme);
+  }
+  if (currentThemeBtn) {
+    toggleClasses(currentThemeBtn, themeBtns);
+  } else {
+    themeBtns[0].classList.add("active");
+  }
+
+  if (localTrackers) {
+    loadScreen(localTrackers);
+  }
+
+  console.log(trackers);
+});
+
 // functions
 function processNumber(e) {
   let currentBtn = e.currentTarget;
   let numberValue = currentBtn.value;
-  currentNumber += numberValue;
-  console.log(currentNumber);
-  updateScreen(currentNumber);
+  trackers.currentNumber += numberValue;
+  updateScreen(trackers.currentNumber);
+  setStorage("currentNumber", trackers.currentNumber);
 }
 function processSymbol(e) {
   let currentBtn = e.currentTarget;
-  currentSymbol = currentBtn.value;
-  firstNumber = currentNumber;
-  currentNumber = "";
-  updateScreen(currentSymbol, true);
+  trackers.currentSymbol = currentBtn.value;
+  trackers.firstNumber = trackers.currentNumber;
+  trackers.currentNumber = "";
+  updateScreen(trackers.currentSymbol, true);
 }
 function processDot(e) {
-  if (currentNumber.includes(".")) {
+  if (trackers.currentNumber.includes(".")) {
     return;
   } else {
-    currentNumber += ".";
-    updateScreen(currentNumber);
+    trackers.currentNumber += ".";
+    updateScreen(trackers.currentNumber);
   }
 }
 function deleteLastNum(e) {
-  currentNumber = currentNumber.substring(0, currentNumber.length - 1);
-  if (!currentNumber) {
-    currentNumber = 0;
+  trackers.currentNumber =
+    trackers.currentNumber.length > 0
+      ? trackers.currentNumber.substring(0, trackers.currentNumber.length - 1)
+      : "";
+  if (!trackers.currentNumber) {
+    trackers.currentNumber = 0;
   }
-  updateScreen(currentNumber);
+  updateScreen(trackers.currentNumber);
 }
 function resetCalc(e) {
-  firstNumber = "";
-  secondNumber = "";
-  currentNumber = "";
+  trackers.firstNumber = "";
+  trackers.secondNumber = "";
+  trackers.currentNumber = "0";
   updateScreen(resetNumber);
+  setStorage("trackers", JSON.stringify(trackers));
 }
 
 function calculate(e) {
-  secondNumber = currentNumber;
-  if (currentSymbol === "+") {
-    currentNumber = +firstNumber + +secondNumber;
-  } else if (currentSymbol === "-") {
-    currentNumber = +firstNumber - +secondNumber;
-  } else if (currentSymbol === "x") {
-    currentNumber = +firstNumber * +secondNumber;
-  } else if (currentSymbol === "/") {
-    currentNumber = +firstNumber / +secondNumber;
+  trackers.secondNumber = trackers.currentNumber;
+  if (trackers.currentSymbol === "+") {
+    trackers.currentNumber = +trackers.firstNumber + +trackers.secondNumber;
+  } else if (trackers.currentSymbol === "-") {
+    trackers.currentNumber = +trackers.firstNumber - +trackers.secondNumber;
+  } else if (trackers.currentSymbol === "x") {
+    trackers.currentNumber = +trackers.firstNumber * +trackers.secondNumber;
+  } else if (trackers.currentSymbol === "/") {
+    trackers.currentNumber = +trackers.firstNumber / +trackers.secondNumber;
   }
 
-  updateScreen(currentNumber);
+  updateScreen(trackers.currentNumber);
 }
 function updateScreen(value, isSymbol = false) {
   if (!isSymbol) {
@@ -145,7 +153,22 @@ function updateScreen(value, isSymbol = false) {
   } else {
     screenTxt.textContent = value;
   }
+
+  setStorage("trackers", JSON.stringify(trackers));
+}
+
+function loadScreen(value) {
+  trackers = value;
+  screenTxt.textContent = formatNumber(trackers.currentNumber);
 }
 function formatNumber(value) {
   return Number.parseFloat(value).toLocaleString("en-US");
+}
+
+// local storage
+function setStorage(key, value) {
+  localStorage.setItem(key, value);
+}
+function getStorage(name) {
+  return localStorage.getItem(name);
 }
