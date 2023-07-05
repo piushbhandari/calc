@@ -118,6 +118,7 @@ ol[role="list"] {
   font-size: 3.2rem;
   line-height: 2.9rem;
   color: var(--screenText);
+  font-weight: 700;
 }
 .theme-switcher-box {
   display: flex;
